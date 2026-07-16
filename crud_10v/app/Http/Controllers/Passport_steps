@@ -1,0 +1,157 @@
+
+1. composer require laravel/passport  
+
+
+2. Run, php artisan migrate  [it give some migrations if not then run, php artisan passport:install ]
+
+
+3. php artisan passport:install [ for secret key ]
+
+
+
+4. In User Model Add:  (by remove imported sanctum)
+   use Laravel\Passport\HasApiTokens;
+   
+   
+   
+5. In Providers->AuthServiceProviders Add:
+   use Laravel\Passport\Passport;
+   
+   And Uncomment this line of code
+    protected $policies = [
+         'App\Models\Model' => 'App\Policies\ModelPolicy',
+    ];
+    
+    
+    
+6. In Config->auth.php  
+   
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+         'api' => [
+            'driver' => 'passport',   // Add this passport
+            'provider' => 'users',
+        ],
+    ],
+    
+    
+    
+7. create routes and controller 
+
+in web.php :
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\AuthController;
+
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+
+
+Route::post('register',[AuthController::class,'register']);
+Route::post('login',[AuthController::class,'login']);
+
+
+Route::middleware('auth:api')->group(function(){
+
+   Route::get('get-user',[AuthController::class,'userInfo']);
+
+});
+
+
+
+
+in controller :
+
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\User;
+use Hash;
+
+
+class AuthController extends Controller
+{
+    //
+
+
+    function register(Request $request){
+
+    	 $user = User::create([
+
+         'name' => $request->name,
+         'email' => $request->email,
+         'password' => Hash::make($request->password),
+
+    	 ]);
+
+    	 $token = $user->createToken('token')->accessToken;
+
+    	 return response()->json(['token'=>$token, 'user'=>$user],200);
+    }
+
+
+  function login(Request $request){
+
+       $data = [
+       
+       'email' => $request->email,
+       'password' => $request->password
+
+       ];
+
+
+       if(auth()->attempt($data)){
+
+       	   $token = auth()->user()->createToken('token')->accessToken;
+       	    return response()->json(['token'=>$token],200);
+
+       }else{
+
+       	    return response()->json(['error'=>'unauthorized'],401); 
+       }
+
+  }
+
+
+
+ function userInfo(){
+
+ 	 $user = auth()->user();
+
+      return response()->json(['user'=>$user],200); 
+ }
+
+
+
+}
+
+
+
+8. Test api in postman  [* NOTE: Use php artisan optimize in cmd everytime]
+
+
+
+   

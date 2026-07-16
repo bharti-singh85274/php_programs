@@ -1,0 +1,413 @@
+1. composer require laravel/breeze
+
+2. php artisan breeze:install
+
+3. npm install
+
+4. npm run dev
+
+5. php artisan migrate
+
+6. php artisan serve
+
+7. //For Admin
+
+1. php artisan make:model Admin -m
+
+2. copy migration and model of user as admin
+
+3. create routes in web.php
+
+   // Admin Auth
+
+Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function(){
+
+Route::namespace('Auth')->group(function(){
+
+           // login route
+
+    Route::get('login','AuthenticatedSessionController@create');
+    Route::post('login','AuthenticatedSessionController@adminlogin');
+
+  });
+
+});
+
+
+
+4. Uncomment protected $namespace = 'App\\Http\\Controllers';
+
+5. For Admin login Controller 
+
+create Admin folder->Auth folder  then copy controller->auth->AuthenticatedSessionController to admin->auth
+change its namespace, namespace App\Http\Controllers\Admin\Auth;
+change create() as view('admin.auth.login');
+change store() as  return redirect()->intended(RouteServiceProvider::ADMIN_HOME);
+Create in RouteServiceProvider.php
+public const ADMIN_HOME = '/admin/dashboard';
+
+
+6. for admin login view
+create admin folder->auth folder, then copy views->auth->login.blade.php into admin->auth and write admin login
+
+7.now createiew login route in web.php
+
+Route::get('login','AuthenticatedSessionController@create')->name('login');
+ 
+8.create admin url linkon top of welcome page to call admin view page
+<a href="{{route('admin.login')}}">Admin login</a> now test
+
+9. now create (save) login route in web.php
+
+Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function(){
+
+  Route::namespace('Auth')->middleware('guest:admin')->group(function(){
+     
+     // login route
+     
+     Route::get("login","AuthenticatedSessionController@create")->name("login");
+     Route::post("login","AuthenticatedSessionController@store")->name("adminlogin");
+
+});
+
+
+* Change in views->admin->auth->login.blade.php to <form method="POST" action="{{route('admin.adminlogin')}}">
+
+
+10 Create admin table in db and "seeder use"
+
+php artisan make:seed AdminSeeder [cmd]
+then import admin model in adminseeder file
+
+Add inside run(),
+
+ $admin =[
+       "name" =>"Admin",
+       "email"=>"admin@admin.com",
+       "password"=>bcrypt('password')
+
+        ];
+        Admin::create($admin);   // create->to create above fields into Admin table
+
+
+Then, in DatabaseSeeder.php
+
+Uncomment line, \App\Models\User::factory(10)->create();
+public function run()
+    {
+         \App\Models\User::factory(10)->create();
+
+        $this->call(AdminSeeder::class);
+    }
+
+Then, php artisan make:seed AdminSeeder [cmd] // brows db gets admin table with created  datas
+
+
+11.  Use of Guard for Admin
+
+Models->Admin
+use HasApiTokens HasFactory, Notifiable
+
+protected $guard = 'admin';
+
+Then, define this guard in config->auth.php copy paste guards web as admins
+
+'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+         'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
+
+Also, copy paste providers users as admins
+
+ 'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+
+
+
+
+12. Use of Middleware for Admin [*Middleware is also used to check any authentication or condition]
+
+then go to, app->https->middleware->RedirectifAuthenticated file
+then write and check if guard is admin then, redirect to admin dashboard not user dashboard
+
+ foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                if($guard =='admin'){
+                     return redirect(RouteServiceProvider::ADMIN_HOME);
+                }
+                return redirect(RouteServiceProvider::HOME);
+            }
+        }
+
+
+
+13. Now check Controllers->Admins->Auth->AuthenticatedSessionController store() with dd for any datas coming or not
+
+14. Use LoginRequest for Admin,
+ Controllers->Admin->Auth->AuthenticatedSessionController 
+change from User LoginRequest to  AdminLoginRequest, use App\Http\Requests\Auth\AdminLoginRequest;
+change store(LoginRequest $request) to store(AdminLoginRequest $request)
+
+public function store(AdminLoginRequest $request)
+    {
+       //dd($request->all());
+        $request->authenticate();
+
+        $request->session()->regenerate();
+
+        return redirect()->intended(RouteServiceProvider::ADMIN_HOME);
+    }
+
+Now, go to App\Http\Request\Auth ,nd create new login request for admin ie AdminLoginRequest also change its class
+and 
+
+ public function authenticate()
+    {
+        $this->ensureIsNotRateLimited();
+
+        if (! Auth::guard('admin')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {   //  guard('admin')->
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }
+
+        RateLimiter::clear($this->throttleKey());
+    }
+
+15. now refresh login page on chrome admin/dashboard should hit
+
+16. now create dashboard page
+copy user dashboard to views->admin->dashboard.blade.php nd change name
+
+ <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __(' Admin Dashboard') }}
+        </h2>
+
+17. now create route to hit admin dashboard view
+  Route::get("dashboard","HomeController@index")->name("dashboard");
+
+in web.php
+
+/ADMIN
+
+Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function(){
+
+  Route::namespace('Auth')->middleware('guest:admin')->group(function(){
+     
+     // login route
+     Route::get("login","AuthenticatedSessionController@create")->name("login");
+     Route::post("login","AuthenticatedSessionController@store")->name("adminlogin");
+
+
+  });
+  
+   Route::get("dashboard","HomeController@index")->name("dashboard");
+   
+});
+
+
+18. create HomeController inside Admin php artisan make:controller AdminHomeController   // for admin dashboard
+
+19. will give Navigtion err, create new admin layout different from user layout,
+
+ 1. copy user layouts folder into views->admin->layouts
+ 2. go to app->view->components, then copy AppLayout to AdminLayout
+ change its class and
+  public function render()
+    {
+        return view('admin.layouts.app');
+    }
+      
+ 3. go to views->admin->layouts->app.blade.php
+ change 21.  @include('admin.layouts.navigation')
+ then go to views->admin->navigation.blade.php
+ change 8   <a href="{{ route('admin.dashboard') }}">
+ change 15  <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+ change 26  <div>{{ Auth::guard('admin')->user()->name }}</div>
+ chnge 66  <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+ change 74,75  <div class="font-medium text-base text-gray-800">{{ Auth::guard('admin')->user()->name }}</div>
+                <div class="font-medium text-sm text-gray-500">{{ Auth::guard('admin')->user()->email }}</div>
+
+
+ Go to views->admin->dashboard ,<x-admin-layout>
+</x-admin-layout>
+
+
+20. now refresh admin/dashboard page shown
+
+21. use of auth for admin login link nd dashboard link on home/welcome
+  
+if admin is login dont show admin login link but dashboard link , then go to viwes->welcome.blade.php
+
+              @auth('admin')
+                   <a href="{{route('admin.dashboard')}}">Admin Dashboard</a>
+                   @else
+                   <a href="{{route('admin.login')}}">Admin login</a>
+
+                   @endauth
+
+
+22. Admin logout controller nd route
+ admin dashboard redirect to user logout, then change it to admin logout
+
+1. go to views->admin->layouts->navigation.blade.php, then change all logouts to admin.logout
+2. go to web.php copy user destroy() from AuthenticatedSessionController
+ Route::post("logout","Auth\AuthenticatedSessionController@destroy")->name("logout");
+
+//ADMIN
+
+Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function(){
+
+  Route::namespace('Auth')->middleware('guest:admin')->group(function(){
+     
+     // login route
+     
+     Route::get("login","AuthenticatedSessionController@create")->name("login");
+     Route::post("login","AuthenticatedSessionController@store")->name("adminlogin");
+
+
+  });
+    Route::middleware('admin')->group(function(){
+    Route::get("dashboard","HomeController@index")->name("dashboard");
+   });
+
+   Route::post("logout","Auth\AuthenticatedSessionController@destroy")->name("logout");
+
+});
+
+ 3. refresh browser successfully logout nd come to home page
+
+
+23. use of middleware
+if admin is login dont show him admin login page again but admin dashboard, so create middleware for this purpose
+
+1. php artisan make:middleware AdminMiddleware
+2. go to app->http->middleware->AdminMiddleware
+3. then change in handle function
+    use Auth;
+    {
+
+        if(!Auth::guard('admin')->check()){     // to check whether admin is login or not, if not redirect to admin login page
+            return redirect()->route('admin.login');
+        }
+        return $next($request);
+
+    }
+ 4. then change in web.php
+
+  //ADMIN
+  Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function(){
+  Route::namespace('Auth')->middleware('guest:admin')->group(function(){
+     
+                // login route 
+     Route::get("login","AuthenticatedSessionController@create")->name("login");
+     Route::post("login","AuthenticatedSessionController@store")->name("adminlogin");
+  });
+     Route::middleware('admin')->group(function(){
+     Route::get("dashboard","HomeController@index")->name("dashboard");
+   });
+
+   Route::post("logout","Auth\AuthenticatedSessionController@destroy")->name("logout");
+
+});
+
+5.now register middleware in kernel.php
+
+ in the end 
+   protected $routeMiddleware = [
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'admin'=>\App\Http\Middleware\AdminMiddleware::class,
+    ];
+
+
+24. if admin is lpgged in dashboard, then he cannot see admin login page before logout the page,use middleware for this purpose
+
+   
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

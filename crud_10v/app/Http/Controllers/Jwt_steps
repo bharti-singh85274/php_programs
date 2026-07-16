@@ -1,0 +1,228 @@
+1.  composer require tymon/jwt-auth --ignore-platform-reqs
+or  composer require -w tymon/jwt-auth --ignore-platform-reqs
+(composer require tymon/jwt-auth  --with-all-dependencies)
+
+2. add  Tymon\JWTAuth\Providers\LaravelServiceProvider::class, in config/app.php. i.e
+         
+          /*
+         * Application Service Providers...
+         */
+        App\Providers\AppServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
+        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\EventServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        
+        
+3. Run command in cmd:    php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
+
+4. Run command in cmd:   php artisan jwt:secret   (will create token in .env)
+
+5. Add in any model or User:
+
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable implements JWTSubject
+
+ function getJWTIdentifier(){
+       return $this->getKey();
+   }
+
+
+  function getJWTCustomClaims(){
+      return [];
+  }
+  
+  
+ 
+6. Change in config/auth.php
+ 
+ 'defaults' => [
+        'guard' => 'api',             // from web to api
+        'passwords' => 'users',
+    ],
+
+
+ 'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+         'api' => [
+            'driver' => 'jwt',         // from token to jwt
+            'provider' => 'users',
+            'hash' => false,
+        ],
+    ],
+    
+ 
+    
+7. THEN RUN, php artisan optimize coz has done configuration in config/auth.php [NOTE: Also run this command everytime making changes related to auth or token while testing api]
+
+8. then make new routes in api.php and controller for creating and testing token with apis
+
+
+Controller file:
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\User;
+use Auth;
+use Validator;
+use Illuminate\Support\Facades\Hash;
+
+class JwtController extends Controller
+{
+    //
+
+     function register(Request $request){
+
+
+  	   $validator = Validator::make($request->all(), [
+
+         'name' => "required|string|min:2|max:100",
+         'email' => "required|string|email|max:100|unique:users",
+         'password' => "required|string|min:6|confirmed"
+
+  	   ]);
+
+
+
+  	   if($validator->fails()){
+  	   	     return response()->json($validator->errors(), 400);
+  	   }
+
+
+  	   $user = User::create([
+
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+
+  	   ]);
+
+  	 //  $tok = JWTAuth::fromUser($user);
+  	   return  response()->json([
+        'msg' => 'user register successfully',
+        'user' => $user
+
+  	   ]);
+  }
+
+
+  function login(Request $request){
+
+         
+          $validator = Validator::make($request->all(), [
+
+         'email' => "required|string|email",
+         'password' => "required|string|min:6"
+
+  	   ]);
+
+
+
+  	   if($validator->fails()){
+  	   	     return response()->json($validator->errors(), 400);
+  	   }
+
+      if(!$token = auth()->attempt($validator->validated()))
+      {
+          return response()->json(['error'=>'unauthorised']);
+      }
+
+      return $this->respondWithToken($token);
+  }
+
+ 
+ protected function respondWithToken($token){
+
+ 	  return response()->json([
+
+       'access_token' => $token,
+       'token_type' => 'bearer',
+       'expires_in' => auth()->factory()->getTTL()*60
+       
+ 	  ]);
+ }
+
+
+  function profile(){
+
+  	   return response()->json(auth()->user());
+  }
+
+  function refresh(){
+  
+  	  return $this->respondWithToken(auth()->refresh());
+  }
+
+
+  function logout(){
+
+  	  auth()->logout();
+
+  	  return response()->json(['msg'=> 'User successfully logged out']);
+  }
+
+
+}
+
+
+  Api.php File
+  
+  <?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\JwtController;
+
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+
+
+Route::group(['middleware'=>'api'], function($routes){
+ 
+
+    Route::post('register',[JwtController::class,'register']);
+	Route::post('login',[JwtController::class,'login']);
+	Route::post('profile',[JwtController::class,'profile']);
+    Route::post('refresh',[JwtController::class,'refresh']);  // Refresh token for newly generated token thats required in  apis
+    Route::post('logout',[JwtController::class,'logout']);
+
+});
+
+
+
+
+9. In postman use only:
+
+key                                                     
+Authorization                                            
+
+value
+Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3JlZnJlc2giLCJpYXQiOjE3MTkwNzE3MzksImV4cCI6MTcxOTA3NTgwOSwibmJmIjoxNzE5MDcyMjA5LCJqdGkiOiJlZVkzbFRuM0pxdTdDaDNKIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.DVlhE0az817WGXQt9pwyCZEaTWhSGK05hyiqM0A02m4
+
+
+    
+ 
