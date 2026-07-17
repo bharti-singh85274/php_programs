@@ -158,12 +158,17 @@ class LogicController extends Controller
     $num = 2;
     $n = 0;
 
+    if($num <= 1){
+    echo $num . " is not prime";
+    }else{
     for($i =2; $i < $num; $i++){   // $i = 2 or more than 2 but never less than 2 for right output
        
-       if($num % 2 == 0){
+       if($num % $i == 0){
           $n++;     //comes here only when condition is false, by adding 1 in n value from 0
           break;
-       }
+        }
+     }
+    
     }
 
     if($n == 0){
