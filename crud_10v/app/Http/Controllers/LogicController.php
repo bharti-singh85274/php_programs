@@ -181,14 +181,14 @@ class LogicController extends Controller
 
      $factor = 1;
 
-     for($i = $n; $i >= 1; $i--){
+     for($i = $n; $i >= 1; $i--){    
          $factor = $i * $factor;
 
      }
     echo $factor;
   }
 
-                    // 0,1, 370,371
+                    // 0,1 to 9, 370,371,407
                    //no is equal to the 'sum' of 'cubes' of its digits:3*3*3 + 7*7*7 + 1*1*1 = 371
   function armstrong(){   
      
