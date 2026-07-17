@@ -18,6 +18,21 @@ class LogicController extends Controller
 
             echo $string[$i];
         }
+
+
+         // WITHOUT USING ANY PHP FUNCTION
+        //     $str = "bharti";
+        //     $length = 0;
+
+        //     for($j=0; isset($str[$j]); $j++){
+        //     $length++;
+        // }
+
+        //     for($i = $length-1; $i >= 0; $i--){
+        //     echo $str[$i];
+        // }
+
+
     }
 
     function midvalue(){
