@@ -51,30 +51,89 @@ class LogicController extends Controller
 
 
     function duplicate_value(){
+         
+           //using forloop helps you understand the logic behind duplicate removal before relying on built-in functions.
+        $arr = [2,2,3,5,2,2,6,3,3,5];
+        $length = count($arr);
 
-         //  Array ( [0] => 3 [1] => 5 [2] => 2 [5] => 9 ),  (unique)
+        for($i = 0; $i < $length; $i++){
 
-                                        //Array ( [0] => 3 [1] => 5 [2] => 2 [3] => 5 [4] => 3 [5] => 9 )     (diff_assoc)
+                  //duplicates are skipped using $found.
+            $found = false;
 
-      // $find_duplicate = array_diff_assoc($arr, array_unique($arr));
-
-      // print_r($find_duplicate);
-       
-       $num = [2,3,4,4,6,2];
-
-       $length = count($num);
-
-       for($i =0; $i < $length; $i++){
-
-          for($j=$i+1; $j< $length; $j++){   // 0 == 1, 0 == 2, 0 == 3, 0 == 4, 0 == 5, 0 == 6false
-                                             // 1 == 2, 1 == 3,
-            if($num[$i] == $num[$j]){
-               echo $num[$j];
+            // Check if this value already appeared before
+            for($k = 0; $k < $i; $k++){  
+                                         
+                if($arr[$i] == $arr[$k]){
+                    $found = true;
+                    break;
+                }
             }
-          }
-          echo "<br>";
-       }
+            if($found){
+                continue;
+            }
+
+            // Check if it appears later
+            for($j = $i + 1; $j < $length; $j++){
+                if($arr[$i] == $arr[$j]){
+                    echo $arr[$i]."<br>";
+                    break;
+                }
+            }
+        }
+
+
     }
+
+
+    public function remove_duplicate(){
+
+    $arr = [2,2,3,5,2,2,6,3,3,5];
+    $length = count($arr);
+
+    $result = [];
+
+    for($i = 0; $i < $length; $i++){
+
+        $duplicate = false;
+
+        // Check if current value is already in result array
+        for($j = 0; $j < count($result); $j++){
+
+            if($arr[$i] == $result[$j]){
+                $duplicate = true;
+                break;
+            }
+
+        }
+
+        // Store only if it is not duplicate
+        if($duplicate == false){
+            $result[] = $arr[$i];
+        }
+
+    }
+
+    print_r($result);
+
+
+    // Easier Version using foreach
+
+    // $arr = [2,2,3,5,2,2,6,3,3,5];
+    // $result = [];
+
+    // foreach($arr as $value){
+
+    //     if(!in_array($value, $result)){
+    //         $result[] = $value;
+    //     }
+    // }
+    // print_r($result);
+
+
+    }
+
+    
 
 
     function duplicate_string(){
@@ -352,7 +411,7 @@ class LogicController extends Controller
         
         $rem = $num % 10;
         $rev = $rev * 10 + $rem;
-        $num = $num/10;
+        $num = (int)($num/10);
     }
 
         echo $rev;

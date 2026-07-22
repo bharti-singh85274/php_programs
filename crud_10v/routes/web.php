@@ -52,13 +52,13 @@ Route::get('relations',[CrudController::class,'relations']);
 
 
 
-
 //------------------------------ PHP Logics ------------------------------------------
 
 
 Route::get('reverse_string',[LogicController::class,'reverse_string']);
 Route::get('midvalue',[LogicController::class,'midvalue']);
 Route::get('duplicate_value',[LogicController::class,'duplicate_value']);
+Route::get('remove_duplicate',[LogicController::class,'remove_duplicate']);
 Route::get('max_smax',[LogicController::class,'max_smax']); // max or 2nd max val in array
 Route::get('table',[LogicController::class,'table']);
 
