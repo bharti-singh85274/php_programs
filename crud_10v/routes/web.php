@@ -61,6 +61,8 @@ Route::get('duplicate_value',[LogicController::class,'duplicate_value']);
 Route::get('remove_duplicate',[LogicController::class,'remove_duplicate']);
 Route::get('max_smax',[LogicController::class,'max_smax']); // max or 2nd max val in array
 Route::get('table',[LogicController::class,'table']);
+Route::get('sum_array',[LogicController::class,'sum_array']);
+Route::get('sum_digits',[LogicController::class,'sum_digits']);
 
 
 Route::get('even_odd',[LogicController::class,'even_odd']);

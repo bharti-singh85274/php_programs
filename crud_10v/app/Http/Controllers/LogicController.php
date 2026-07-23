@@ -419,5 +419,43 @@ class LogicController extends Controller
   }
 
 
+  function sum_array(){
+     
+                //Sum of array elements
+     $arr = [2,4,6,8];   // 20
+
+    $length = count($arr);
+    $count = 0;
+
+    for($i=0; $i < $length; $i++){
+
+    $count+= $arr[$i];
+
+    }
+    echo $count;
+
+  }
+
+
+  function sum_digits(){
+
+    //This is one of the most common DSA interview questions. The idea is to repeatedly extract the last digit using % 10 and then remove that digit using integer division by 10.
+    $num = 12345;
+    $sum = 0;
+
+    while ($num > 0) {
+
+        $digit = $num % 10;      // Get last digit
+        $sum += $digit;          // Add it to sum
+        $num = (int)($num / 10); // Remove last digit
+
+    }
+
+    echo $sum;
+
+
+  }
+
+
 
 }
