@@ -457,5 +457,113 @@ class LogicController extends Controller
   }
 
 
+               // Using formula
+  function missing_no(){
+      
+     $arr = [1,2,3,5];
+
+     $n = count($arr) + 1;  //Because one number is missing.
+ 
+     $expectedSum = $n * ($n + 1) / 2;   // 15 (sum formula)
+
+     $actualSum = 0;
+
+     foreach($arr as $value){
+        $actualSum += $value;     // 11
+     }
+
+     $missing = $expectedSum - $actualSum;  //4
+
+     echo "Missing Number = " . $missing;
+
+
+
+        // Without Formula
+        $arr = [1,2,3,5,6];
+        $max = max($arr);
+
+            for($i = 1; $i <= $max; $i++)
+            {
+                if(!in_array($i, $arr))
+                {
+                    echo $i;
+                    break;
+                }
+            }
+
+
+      //Find Missing Number Using XOR
+        $arr = [1,2,4,5];
+
+        $n = count($arr)+1;
+
+        $x1 = 0;
+        $x2 = 0;
+
+        for($i=1;$i<=$n;$i++)
+        {
+            $x1 ^= $i;
+        }
+
+        foreach($arr as $value)
+        {
+            $x2 ^= $value;
+        }
+        echo $x1 ^ $x2;
+
+
+
+
+        //Multiple Missing Numbers
+        $arr = [1,2,4,6,8];
+
+        $max = max($arr);
+
+        for($i=1;$i<=$max;$i++)
+        {
+            if(!in_array($i,$arr))
+            {
+                echo $i . "<br>";
+            }
+        }
+
+
+
+  }
+
+
+
+
+
+  function move_to_end(){
+      
+                  //Move all zeros to end
+        $arr = [1,0,2,0,3,4];
+
+        $index = 0;
+
+        // Move all non-zero elements to the front
+        for($i = 0; $i < count($arr); $i++)
+        {
+            if($arr[$i] != 0)
+            {
+                $arr[$index] = $arr[$i];  // $arr[index] value will be replaced by arr[$i] everytime conditon true
+                $index++;
+            }
+        }
+
+        // Fill remaining positions with zeros
+        while($index < count($arr))
+        {
+            $arr[$index] = 0;
+            $index++;
+        }
+
+        print_r($arr);
+
+
+  }
+
+
 
 }

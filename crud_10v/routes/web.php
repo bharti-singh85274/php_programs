@@ -63,7 +63,8 @@ Route::get('max_smax',[LogicController::class,'max_smax']); // max or 2nd max va
 Route::get('table',[LogicController::class,'table']);
 Route::get('sum_array',[LogicController::class,'sum_array']);
 Route::get('sum_digits',[LogicController::class,'sum_digits']);
-
+Route::get('missing_no',[LogicController::class,'missing_no']);
+Route::get('move_to_end',[LogicController::class,'move_to_end']);
 
 Route::get('even_odd',[LogicController::class,'even_odd']);
 Route::get('prime',[LogicController::class,'prime']);
