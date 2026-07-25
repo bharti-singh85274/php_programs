@@ -540,7 +540,7 @@ class LogicController extends Controller
                   //Move all zeros to end
         $arr = [1,0,2,0,3,4];
 
-        $index = 0;
+        $index = 0;    //Because we want to start filling the array from the first position.So we always start at 0. Think of $index as an empty box pointer.
 
         // Move all non-zero elements to the front
         for($i = 0; $i < count($arr); $i++)
@@ -548,7 +548,7 @@ class LogicController extends Controller
             if($arr[$i] != 0)
             {
                 $arr[$index] = $arr[$i];  // $arr[index] value will be replaced by arr[$i] everytime conditon true
-                $index++;
+                $index++;    // to go to next element (The pointer ($index) always tells you the next free position where a non-zero element should be placed.)
             }
         }
 
@@ -561,6 +561,91 @@ class LogicController extends Controller
 
         print_r($arr);
 
+
+  }
+
+
+
+  function anagram(){
+
+     //Two strings are anagrams if:
+
+    // They contain the same characters
+    // The frequency of every character is the same
+    // The order does not matter
+
+     $str1 = "listen";
+     $str2 = "silent";
+
+     if(strlen($str1) != strlen($str2))
+     {
+        echo "Not Anagram";
+        exit;
+     }
+
+     $arr1 = str_split($str1);
+     $arr2 = str_split($str2);
+
+     sort($arr1);
+     sort($arr2);
+
+     if($arr1 == $arr2)
+     {
+        echo "Anagram";
+     }
+     else
+     {
+        echo "Not Anagram";
+     }
+
+  }
+
+
+
+  function count_frequency_array(){
+      
+     $arr = [2,4,2,5,4,2];
+
+        $freq = [];  // because $arr already stores the original numbers.So we create another array This new array will store Number → Frequency.
+                     //This array will store: Key = Array element and Value = Frequency
+
+        foreach($arr as $value)
+        {
+            if(isset($freq[$value]))   // check the given $value exists in $freq = [],if not go to else part. Step after step it will start getting values in key value form
+            {
+                $freq[$value]++;    // it means +1
+            }
+            else
+            {
+                $freq[$value] = 1;     // here, $freq[$value] it becomes key and = 1 value
+            }
+        }
+
+        print_r($freq);
+
+  }
+
+
+
+  function sum(){
+
+      //two numbers whose sum is equal to the target.
+      $arr = [2,7,11,15];
+      $target = 9;
+
+        $length = count($arr);
+
+        for($i = 0; $i < $length-1; $i++)
+        {
+            for($j = $i+1; $j < $length; $j++)
+            {
+                if($arr[$i] + $arr[$j] == $target)
+                {
+                    echo "Numbers: ".$arr[$i]." + ".$arr[$j]." = ".$target;
+                    break 2; // Exit both loops
+                }
+            }
+        }
 
   }
 
