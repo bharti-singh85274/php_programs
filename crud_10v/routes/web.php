@@ -68,6 +68,8 @@ Route::get('move_to_end',[LogicController::class,'move_to_end']);
 Route::get('anagram',[LogicController::class,'anagram']);
 Route::get('count_frequency_array',[LogicController::class,'count_frequency_array']);
 Route::get('sum',[LogicController::class,'sum']);
+Route::get('binary_search',[LogicController::class,'binary_search']);
+Route::get('linear_search',[LogicController::class,'linear_search']);
 
 
 Route::get('even_odd',[LogicController::class,'even_odd']);

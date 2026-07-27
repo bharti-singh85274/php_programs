@@ -623,6 +623,81 @@ class LogicController extends Controller
 
         print_r($freq);
 
+
+
+        // Find Maximum Frequency Element
+       
+        $arr = [2,2,3,5,2,2,6,3,3,5];
+
+        $freq = [];
+
+        // Count frequency
+        foreach($arr as $value)
+        {
+            if(isset($freq[$value]))
+            {
+                $freq[$value]++;
+            }
+            else
+            {
+                $freq[$value] = 1;
+            }
+        }
+
+        $maxFreq = 0;
+        $maxElement = "";
+
+        foreach($freq as $key => $count)
+        {
+            if($count > $maxFreq)
+            {
+                $maxFreq = $count;
+                $maxElement = $key;
+            }
+        }
+
+        echo "Maximum Frequency Element = ".$maxElement."<br>";
+        echo "Frequency = ".$maxFreq;
+
+
+
+        //Find Minimum Frequency Element
+
+        $arr = [2,2,3,5,2,2,6,3,3,5];
+
+        $freq = [];
+
+        // Count frequency
+        foreach($arr as $value)
+        {
+            if(isset($freq[$value]))
+            {
+                $freq[$value]++;
+            }
+            else
+            {
+                $freq[$value] = 1;
+            }
+        }
+
+        // Initialize with first element of frequency array
+        $minFreq = PHP_INT_MAX;
+        $minElement = "";
+
+        foreach($freq as $key => $count)
+        {
+            if($count < $minFreq)
+            {
+                $minFreq = $count;
+                $minElement = $key;
+            }
+        }
+
+        echo "Minimum Frequency Element = " . $minElement . "<br>";
+        echo "Frequency = " . $minFreq;
+
+
+
   }
 
 
@@ -637,7 +712,7 @@ class LogicController extends Controller
 
         for($i = 0; $i < $length-1; $i++)
         {
-            for($j = $i+1; $j < $length; $j++)
+            for($j = $i+1; $j < $length; $j++)  //$j+1 (Start checking only AFTER the current element,saves time and from extra unnecssary comparisons)
             {
                 if($arr[$i] + $arr[$j] == $target)
                 {
@@ -647,8 +722,180 @@ class LogicController extends Controller
             }
         }
 
+
+
+     //First Occurrence
+       $arr = [2,4,6,4,7,4];
+
+        $search = 4;
+
+        for($i=0;$i<count($arr);$i++)
+        {
+            if($arr[$i]==$search)
+            {
+                echo "First occurrence at index ".$i;
+                break;
+            }
+        }
+
+
+    // Last Occurrence    
+    $arr = [2,4,6,4,7,4];
+
+    $search = 4;
+
+    for($i=count($arr)-1;$i>=0;$i--)
+    {
+        if($arr[$i]==$search)
+        {
+            echo "Last occurrence at index ".$i;
+            break;
+        }
+    }
+
+
+
+    //Search Using array_search()
+    $arr = [10,20,30,40];
+
+    $index = array_search(30, $arr);
+
+    if($index == true)
+    {
+        echo "Found at index ".$index;
+    }
+    else
+    {
+        echo "Not Found";
+    }
+
+
+
+    //Search Using in_array()
+    $arr = [5,10,15,20];
+
+    if(in_array(15,$arr))
+    {
+        echo "Found";
+    }
+    else
+    {
+        echo "Not Found";
+    }
+
+
+
+    // Find All Occurrences
+    $arr = [2,4,6,4,7,4];
+
+    $search = 4;
+
+    for($i=0;$i<count($arr);$i++)
+    {
+        if($arr[$i]==$search)
+        {
+            echo "Found at index ".$i."<br>";
+        }
+    }
+
+
+
+    //Count Occurrences
+    $arr = [2,4,6,4,7,4];
+
+    $search = 4;
+
+    $count = 0;
+
+    foreach($arr as $value)
+    {
+        if($value == $search)
+        {
+            $count++;
+        }
+    }
+
+    echo "Total Occurrences = ".$count;
+
+
+
+   //Search String
+    $arr = ["Apple","Banana","Orange","Mango"];
+
+    $search = "Orange";
+
+    foreach($arr as $key=>$value)
+    {
+        if($value==$search)
+        {
+            echo "Found at index ".$key;
+            break;
+        }
+    }
+
+
+
   }
 
+
+
+  function binary_search(){
+
+     //Binary Search is much faster than Linear Search: instead of checking every element one by one, it repeatedly discards half of the remaining search range until the target is found
+
+        $arr = [5,10,15,20,25,30,35];
+        $search = 25;
+
+        $low = 0;
+        $high = count($arr)-1;   //= 6. Why minus 1? Because indexes start from 0, not 1
+ 
+        while($low <= $high)   //Keep searching until the searching range becomes empty
+        {
+            $mid = floor(($low+$high)/2);
+
+            if($arr[$mid] == $search)
+            {
+                echo "Found at index ".$mid;
+                break;
+            }
+            elseif($search > $arr[$mid])
+            {
+                $low = $mid + 1;   // If the searched value is greater than the middle value, everything from low to mid is too small (so +1), so we start searching after mid
+            }
+            else
+            {
+                $high = $mid - 1;  //If the searched value is smaller than the middle value, everything from mid to high is too large (so -1), so we stop searching before mid
+            }
+        }
+
+  }
+
+
+
+  function linear_search(){
+
+      // Works on any array sorted or unsorted
+     $arr = [12, 5, 30, 9, 18];
+        $search = 9;
+
+        $found = false;
+
+        for($i = 0; $i < count($arr); $i++)
+        {
+            if($arr[$i] == $search)
+            {
+                echo "Found at index ".$i;
+                $found = true;
+                break;
+            }
+        }
+
+        if(!$found)
+        {
+            echo "Element not found";
+        }
+
+  }
 
 
 }
