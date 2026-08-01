@@ -851,9 +851,9 @@ class LogicController extends Controller
  
         while($low <= $high)   //Keep searching until the searching range becomes empty
         {
-            $mid = floor(($low+$high)/2);
+            $mid = floor(($low+$high)/2);     //# POINT TO REMEMBER
 
-            if($arr[$mid] == $search)
+            if($arr[$mid] == $search)         //# POINT TO REMEMBER
             {
                 echo "Found at index ".$mid;
                 break;
@@ -896,6 +896,333 @@ class LogicController extends Controller
         }
 
   }
+
+
+
+
+//-------------------------------------  SORTING PROGRAMS  --------------------------------------/
+//Note: Bubble,Selection,Insertion(But Insertion is lil opposite to bubble & selection) is similar and quick & merge is smiliar including functions in both programs
+
+
+
+
+
+  function bubble_sort(){
+   //Bubble sort- it repeatedly compares the adjacent elements in a list or array and swaps them if they are in the wrong order.this process continues until the list is completely sorted. 
+
+    //   The idea behind the loop conditions
+    // $i < $n - 1: We need at most n - 1 passes to sort n elements. A final pass would do no useful work.
+    // $j < $n - $i - 1:
+    // - $i skips the elements that are already sorted at the end of the array.
+    // - 1 ensures that $arr[$j + 1] is always a valid index, avoiding an out-of-bounds access.
+
+    // This optimization is what makes Bubble Sort more efficient than always comparing every pair on every pass.
+
+    //Initial array : 5 3 8 4 2
+    //Pass 1:i = 0
+    // Need to compare
+    // 5-3
+    // 3-8
+    // 8-4
+    // 4-2     // Total comparisons 4
+
+    //After Pass 1:  3 5 4 2 8
+
+    //Pass 2: i = 1
+    // Now compare only
+    // 3-5
+    // 5-4
+    // 4-2       //We skip comparing with 8 because it's already sorted.
+
+    //After Pass 2:  3 4 2 5 8      // Now 5 8 are fixed.
+
+    //Pass 3: i = 2
+    // Compare only
+    // 3-4
+    // 4-2
+
+    //After Pass 3:  3 2 4 5 8     // Now 4 5 8  are fixed.
+
+    //Pass 4: i = 3
+    //Compare only
+    //3-2
+
+
+
+     $arr = [5,3,8,4,2];
+        $n = count($arr);
+
+        for($i=0; $i<$n-1; $i++)
+        {
+            for($j=0; $j<$n-$i-1; $j++)    //# Things to remember
+            {
+                if($arr[$j] > $arr[$j+1])   //# Things to remember ">"
+                {
+                    $temp = $arr[$j];
+                    $arr[$j] = $arr[$j+1];
+                    $arr[$j+1] = $temp;
+                }
+            }
+        }
+
+        print_r($arr);
+
+  }
+
+
+
+
+  function selection_sort(){
+
+  // its a comparison based sorting algorithm that repeatedly finds the smallest element from the unsorted part of list nd places it at the begining. this process continues until the entire list is sorted    
+
+    $arr = [64,25,12,22,11];
+    $n = count($arr);
+
+    for($i=0; $i<$n-1; $i++)   //-1 cz last element already get sorted after swappig
+    {
+        $min = $i;     // bcz this algo firstly finds the smallest element nd index only
+
+        for($j=$i+1; $j<$n; $j++)
+        {
+            if($arr[$j] < $arr[$min])    //#Things to Remember
+            {
+                $min = $j;              //#Things to Remember
+            }
+        }
+
+        $temp = $arr[$i];              //#Things to Remember
+        $arr[$i] = $arr[$min];
+        $arr[$min] = $temp;
+    }
+
+    print_r($arr);
+
+  }
+
+
+  function insertion_sort(){
+
+     //builds the sorted array one element at a time. It takes one element (called the key) and inserts it into its correct position among the already sorted elements on its left.
+
+    $arr = [12, 11, 13, 5, 6];
+    $n = count($arr);
+
+    for($i = 1; $i < $n; $i++)
+    {
+        $key = $arr[$i];
+        $j = $i - 1;    // Insertion Sort always compares the key with the previous elements.
+
+        while($j >= 0 && $arr[$j] > $key)      //#Things to Remember
+        {
+            $arr[$j + 1] = $arr[$j];          //#Things to Remember
+            $j--;
+        }
+
+        $arr[$j + 1] = $key;                  //#Things to Remember
+    }
+
+    echo "Sorted Array: ";
+    foreach($arr as $value)
+    {
+        echo $value . " ";
+    }
+
+
+  }
+
+
+//   Why Merge Sort is Different from Bubble, Selection, and Insertion Sort
+// Bubble Sort: Repeatedly swaps adjacent elements.
+// Selection Sort: Finds the smallest element and places it at the correct position.
+// Insertion Sort: Inserts each element into its correct position within the already sorted part of the array.
+// Merge Sort: First divides the array into smaller arrays, then merges them back together in sorted order. It uses extra memory but guarantees O(n log n) time in the best, average, and worst cases.
+
+function merge_sort(){
+
+         // Demo to understand in short
+    $left  = [27, 38, 43];
+    $right = [3, 9, 10, 82];
+
+    $result = [];
+
+    $i = 0;
+    $j = 0;
+
+    while ($i < count($left) && $j < count($right))
+    {
+        if ($left[$i] < $right[$j])
+        {
+            $result[] = $left[$i];
+            $i++;
+        }
+        else
+        {
+            $result[] = $right[$j];
+            $j++;
+        }
+    }
+
+    while ($i < count($left))
+    {
+        $result[] = $left[$i];
+        $i++;
+    }
+
+    while ($j < count($right))
+    {
+        $result[] = $right[$j];
+        $j++;
+    }
+
+    print_r($result);
+
+
+    // Full Program starts here
+
+    function mergeSort($arr)
+    {
+        // If array has only one element, it is already sorted.
+        if(count($arr) <= 1)
+        {
+            return $arr;
+        }
+
+        // Find middle position.
+        $mid = floor(count($arr) / 2);
+
+        // Divide array into left and right parts.
+        $left = array_slice($arr, 0, $mid);  //Start from index 0, Copy 3 elements
+        $right = array_slice($arr, $mid);  //Start at index 3 and copy everything until the end.
+
+        // Sort both halves recursively.
+        $left = mergeSort($left);
+        $right = mergeSort($right);
+
+        // Merge the two sorted halves.
+        return merge($left, $right);
+    }
+
+    function merge($left, $right)
+    {
+        $result = [];
+
+        $i = 0;
+        $j = 0;
+
+        while($i < count($left) && $j < count($right))    //# Things to Remember
+        {
+            if($left[$i] < $right[$j])
+            {
+                $result[] = $left[$i];
+                $i++;
+            }
+            else
+            {
+                $result[] = $right[$j];
+                $j++;
+            }
+        }
+
+        while($i < count($left))
+        {
+            $result[] = $left[$i];
+            $i++;
+        }
+
+        while($j < count($right))
+        {
+            $result[] = $right[$j];
+            $j++;
+        }
+
+        return $result;
+    }
+
+    $arr = [38, 27, 43, 3, 9, 82, 10];
+
+    $sorted = mergeSort($arr);
+
+    echo "Sorted Array: ";
+
+    foreach($sorted as $value)
+    {
+        echo $value." ";
+    }
+
+
+  
+
+}
+
+
+function quick_sort(){
+
+// Quick Sort is a divide and conquer sorting algorithm.
+
+// It works by:
+
+// Selecting one element as a pivot.
+// Placing smaller elements on the left side of the pivot.
+// Placing larger elements on the right side of the pivot.
+// Repeating the same process for the left and right parts until the array is sorted.
+   
+  $arr = [10, 7, 8, 9, 1, 5];
+
+    $n = count($arr);
+
+    function quickSort($arr)
+    {
+        $size = count($arr);
+
+        // If array has 0 or 1 element, it is already sorted
+        if($size <= 1)
+        {
+            return $arr;
+        }
+
+        // Selecting first element as pivot
+        $pivot = $arr[0];
+
+        $left = [];
+        $right = [];
+
+
+        // Divide array into left and right
+        for($i = 1; $i < $size; $i++)            // One loop used only
+        {
+            if($arr[$i] < $pivot)                //# Things to Remember
+            {
+                $left[] = $arr[$i];
+            }
+            else
+            {
+                $right[] = $arr[$i];
+            }
+        }
+
+
+    // Sort left and right parts again
+    return array_merge(                         //# Things to Remember
+        quickSort($left),
+        [$pivot],
+        quickSort($right)
+    );
+}
+
+
+    $arr = quickSort($arr);
+
+
+    echo "Sorted Array: ";
+
+    foreach($arr as $value)
+    {
+        echo $value . " ";
+    }
+
+
+}
 
 
 }

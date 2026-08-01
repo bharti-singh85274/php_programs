@@ -70,7 +70,11 @@ Route::get('count_frequency_array',[LogicController::class,'count_frequency_arra
 Route::get('sum',[LogicController::class,'sum']);
 Route::get('binary_search',[LogicController::class,'binary_search']);
 Route::get('linear_search',[LogicController::class,'linear_search']);
-
+Route::get('bubble_sort',[LogicController::class,'bubble_sort']);
+Route::get('selection_sort',[LogicController::class,'selection_sort']);
+Route::get('insertion_sort',[LogicController::class,'insertion_sort']);
+Route::get('merge_sort',[LogicController::class,'merge_sort']);
+Route::get('quick_sort',[LogicController::class,'quick_sort']);
 
 Route::get('even_odd',[LogicController::class,'even_odd']);
 Route::get('prime',[LogicController::class,'prime']);
