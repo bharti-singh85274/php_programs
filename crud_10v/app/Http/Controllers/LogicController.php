@@ -156,22 +156,35 @@ class LogicController extends Controller
   
      // THIS IS THE RIGHT CODE WITH RIGHT OUTPUTrrrrrrrrrrrrrrrrr
 
-        $arr = [4, 26, 1, 23, 12, 1, 116, 15]; 
+     $arr = [4, 26, 1, 23, 12, 1, 116, 15];
 
-        $max = $smax = null;  // Set both to null initially
+        $max = $smax = $min = null;
 
-        for($i = 0; $i < count($arr); $i++) {
-            if ($max === null || $arr[$i] > $max) {  // Handle the first element properly
-                $smax = $max;  // Update second max before updating max
+        for ($i = 0; $i < count($arr); $i++) {
+
+            // Find Minimum
+            if ($min === null || $arr[$i] < $min) {
+                $min = $arr[$i];
+            }
+
+            // Find Maximum
+            if ($max === null || $arr[$i] > $max) {
+
+                $smax = $max;
                 $max = $arr[$i];
-            } elseif ($smax === null || $arr[$i] > $smax) {  // Update second max when a new candidate is found
-               // if ($arr[$i] != $max) {  // Ensure $smax is not equal to $max
-                    $smax = $arr[$i];
-                //}
+
+            }
+            // Find Second Maximum
+            elseif ($arr[$i] != $max && ($smax === null || $arr[$i] > $smax)) {
+
+                $smax = $arr[$i];
             }
         }
 
-        echo 'max: ' . $max . ', smax: ' . $smax;
+        echo "Minimum = $min <br>";
+        echo "Maximum = $max <br>";
+        echo "Second Maximum = $smax";
+
 
    }
 
@@ -601,6 +614,56 @@ class LogicController extends Controller
   }
 
 
+  function rotate_array(){       // rotates like a paper from behind, so last elemnts shows first by given k value and first elements shows last
+
+      $arr = [23, 25, 21,22,15];
+        $n = count($arr);
+        $k = 3;
+
+        // If k is greater than array size
+        $k = $k % $n;  //If k is greater than the array size, rotating more than one full cycle is unnecessary
+
+        $result = [];      
+
+        for($i = 0; $i < $n; $i++)
+        {
+            $result[($i + $k) % $n] = $arr[$i];   //# POINTS TO REMEMBER [formula]
+        }
+
+        ksort($result); //During the loop, elements are inserted in this order:
+        // Iteration 1 → Index 3
+        // Iteration 2 → Index 4
+        // Iteration 3 → Index 0
+        // Iteration 4 → Index 1
+        // Iteration 5 → Index 2
+
+        // 3 => 23
+        // 4 => 25
+        // 0 => 21
+        // 1 => 22
+        // 2 => 15
+        //If you print it immediately: print_r($result); Output may appear as:
+        // Array
+        // (
+        //     [3] => 23
+        //     [4] => 25
+        //     [0] => 21
+        //     [1] => 22
+        //     [2] => 15
+        // )
+
+        //Using: ksort($result);  sorts the array by its keys (indexes):
+        // 0 => 21
+        // 1 => 22
+        // 2 => 15
+        // 3 => 23
+        // 4 => 25
+
+
+        print_r($result); 
+
+  }
+
 
   function count_frequency_array(){
       
@@ -724,7 +787,7 @@ class LogicController extends Controller
 
 
 
-     //First Occurrence
+     //First Occurrence [Ques 2]
        $arr = [2,4,6,4,7,4];
 
         $search = 4;
@@ -739,7 +802,7 @@ class LogicController extends Controller
         }
 
 
-    // Last Occurrence    
+    // Last Occurrence  [Ques 3]
     $arr = [2,4,6,4,7,4];
 
     $search = 4;
@@ -755,7 +818,7 @@ class LogicController extends Controller
 
 
 
-    //Search Using array_search()
+    //Search Using array_search()  [Ques 3]
     $arr = [10,20,30,40];
 
     $index = array_search(30, $arr);
@@ -1220,6 +1283,98 @@ function quick_sort(){
     {
         echo $value . " ";
     }
+
+
+}
+
+
+
+
+function heap_sort(){
+
+  
+// Heap Sort is a comparison-based sorting algorithm that uses a special binary tree called a Heap to sort elements.
+
+// It first converts the array into a Max Heap, then repeatedly removes the largest element (the root), places it at the end of the array, and rebuilds the heap until the array is sorted.
+// Ascending order → Use Max Heap
+// Descending order → Use Min Heap
+
+// Heap: A Heap is a Complete Binary Tree.
+// Every level is completely filled except possibly the last.
+// The last level is filled from left to right.
+
+// There are two types:
+// 1. Max Heap- Parent is always greater than or equal to its children.
+// 2. Min Heap- Parent is always smaller than its children.
+
+  
+   
+// Things to remember: 2 loops used, 2 functions used where in 2nd function calls 1st function twice in both loops. Three formulas used: floor(count($arr) / 2) - 1, $left = 2 * $i + 1;,$right = 2 * $i + 2;
+
+  function heapify(&$arr, $n, $i) // Rule to remember for interviews: Use & (pass by reference) when a function needs to modify the original variable passed to it. If a function only needs to read the data and not change it, you generally don't need &.
+
+{
+    $largest = $i;
+
+    $left = 2 * $i + 1;
+
+    $right = 2 * $i + 2;
+
+    // Check left child
+    if ($left < $n && $arr[$left] > $arr[$largest])
+    {
+        $largest = $left;
+    }
+
+    // Check right child
+    if ($right < $n && $arr[$right] > $arr[$largest])
+    {
+        $largest = $right;
+    }
+
+    // If largest is not root
+    if ($largest != $i)
+    {
+        $temp = $arr[$i];
+        $arr[$i] = $arr[$largest];
+        $arr[$largest] = $temp;
+
+        // Heapify affected subtree
+        heapify($arr, $n, $largest);
+    }
+}
+
+function heapSort(&$arr)
+{
+    $n = count($arr);
+
+    // Build Max Heap
+    for ($i = floor($n / 2) - 1; $i >= 0; $i--)
+    {
+        heapify($arr, $n, $i);
+    }
+
+    // Extract elements
+    for ($i = $n - 1; $i > 0; $i--)
+    {
+        $temp = $arr[0];
+        $arr[0] = $arr[$i];
+        $arr[$i] = $temp;
+
+        heapify($arr, $i, 0);
+    }
+}
+
+    $arr = [4,10,3,5,1];
+
+    echo "Original Array:<br>";
+    print_r($arr);
+
+    heapSort($arr);
+
+    echo "<br><br>Sorted Array:<br>";
+    print_r($arr);
+
 
 
 }
