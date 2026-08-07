@@ -904,7 +904,11 @@ class LogicController extends Controller
 
   function binary_search(){
 
-     //Binary Search is much faster than Linear Search: instead of checking every element one by one, it repeatedly discards half of the remaining search range until the target is found
+      //Binary Search is much faster than Linear Search: instead of checking every element one by one, it repeatedly discards half of the remaining search range until the target is found
+
+    //   Rule to remember:
+    //   Linear Search → Works on any array (sorted or unsorted).
+    //   Binary Search → Works only on a sorted array.
 
         $arr = [5,10,15,20,25,30,35];
         $search = 25;
@@ -1252,7 +1256,7 @@ function quick_sort(){
 
 
         // Divide array into left and right
-        for($i = 1; $i < $size; $i++)            // One loop used only
+        for($i = 1; $i < $size; $i++)            //One function,One loop used only
         {
             if($arr[$i] < $pivot)                //# Things to Remember
             {
@@ -1294,7 +1298,7 @@ function heap_sort(){
 
   
 // Heap Sort is a comparison-based sorting algorithm that uses a special binary tree called a Heap to sort elements.
-
+// & used as call by reference to modify or change values of array in function
 // It first converts the array into a Max Heap, then repeatedly removes the largest element (the root), places it at the end of the array, and rebuilds the heap until the array is sorted.
 // Ascending order → Use Max Heap
 // Descending order → Use Min Heap
@@ -1309,7 +1313,7 @@ function heap_sort(){
 
   
    
-// Things to remember: 2 loops used, 2 functions used where in 2nd function calls 1st function twice in both loops. Three formulas used: floor(count($arr) / 2) - 1, $left = 2 * $i + 1;,$right = 2 * $i + 2;
+// Things to remember:  2 functions used, 2 same loops separately used in 2nd function nd calls 1st function twice in both loops. Three formulas used: floor(count($arr) / 2) - 1, $left = 2 * $i + 1;,$right = 2 * $i + 2;
 
   function heapify(&$arr, $n, $i) // Rule to remember for interviews: Use & (pass by reference) when a function needs to modify the original variable passed to it. If a function only needs to read the data and not change it, you generally don't need &.
 

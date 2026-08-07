@@ -7,7 +7,7 @@ use App\Http\Controllers\PatternController;
 use App\Http\Controllers\PracticeController;
 use App\Http\Controllers\PreparationInterview;
 use App\Http\Controllers\TestController;
-
+use App\Http\Controllers\AdvanceLogicsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -77,7 +77,9 @@ Route::get('insertion_sort',[LogicController::class,'insertion_sort']);
 Route::get('merge_sort',[LogicController::class,'merge_sort']); 
 Route::get('quick_sort',[LogicController::class,'quick_sort']);
 Route::get('heap_sort',[LogicController::class,'heap_sort']);
-
+Route::get('hashing',[AdvanceLogicsController::class,'hashing']);
+Route::get('recursion',[AdvanceLogicsController::class,'recursion']);
+Route::get('linked_list',[LinkedListController::class,'linked_list']);
 
 Route::get('even_odd',[LogicController::class,'even_odd']);
 Route::get('prime',[LogicController::class,'prime']);
