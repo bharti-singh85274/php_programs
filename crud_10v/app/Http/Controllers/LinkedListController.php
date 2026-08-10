@@ -400,7 +400,7 @@ echo $count;
 
 ?>
 
-// 10 Reverse Linked List (Iterative)
+// 10 Reverse Linked List (Iterative)    // Remeber: $prev,$current,$next
 
 <?php
 
@@ -443,7 +443,7 @@ while($temp)
 
 ?>
 
-// 11.  Find Middle Node
+// 11.  Find Middle Node      // Remeber: $slow and $fast to find middle, no use of temp var
 
 <?php
 
@@ -465,10 +465,10 @@ $head->next->next = new Node(30);
 $head->next->next->next = new Node(40);
 $head->next->next->next->next = new Node(50);
 
-$slow = $head;
-$fast = $head;
+$slow = $head;               // No temp use
+$fast = $head;               // No temp use
 
-while($fast != null && $fast->next != null)
+while($fast != null && $fast->next != null)    //POINTS TO REMEMBER (Check fast in while)
 {
     $slow = $slow->next;
     $fast = $fast->next->next;
@@ -512,3 +512,91 @@ while($temp != null)
 echo "Length = ".$length;
 
 ?>
+
+// 13 Merge two sorted linked lists
+
+
+
+<!------------------------------- Merge Linked Lists ---------------------------------->
+
+<?php
+
+class Node
+{
+    public $data;              //POINT TO REMEMBER
+    public $next;
+
+    function __construct($data)
+    {
+        $this->data = $data;
+        $this->next = null;
+    }
+}
+
+function mergeLists($head1, $head2)      //POINT TO REMEMBER
+{
+    // Dummy node
+    $dummy = new Node(0);   //POINT TO REMEMBER
+    $temp = $dummy;
+
+    // Compare both lists
+    while ($head1 != null && $head2 != null)         //POINT TO REMEMBER
+    {
+        if ($head1->data <= $head2->data)
+        {
+            $temp->next = $head1;
+            $head1 = $head1->next;
+        }
+        else
+        {
+            $temp->next = $head2;
+            $head2 = $head2->next;
+        }
+
+        $temp = $temp->next;
+    }
+
+    // Add remaining nodes
+    if ($head1 != null)
+    {
+        $temp->next = $head1;
+    }
+    else
+    {
+        $temp->next = $head2;
+    }
+
+    return $dummy->next;
+}
+
+function display($head)             //POINT TO REMEMBER
+{
+    while ($head != null)
+    {
+        echo $head->data . " ";   //POINT TO REMEMBER
+        $head = $head->next;
+    }
+}
+
+
+// First sorted linked list
+$head1 = new Node(1);                
+$head1->next = new Node(3);
+$head1->next->next = new Node(5);
+
+// Second sorted linked list
+$head2 = new Node(2);
+$head2->next = new Node(4);
+$head2->next->next = new Node(6);
+
+// Merge
+$merged = mergeLists($head1, $head2);     //POINT TO REMEMBER
+
+// Display result
+echo "Merged List: ";
+display($merged);
+
+?>
+
+
+
