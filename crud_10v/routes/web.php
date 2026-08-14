@@ -81,6 +81,7 @@ Route::get('hashing',[AdvanceLogicsController::class,'hashing']);
 Route::get('recursion',[AdvanceLogicsController::class,'recursion']);
 Route::get('linked_list',[LinkedListController::class,'linked_list']);
 Route::get('stack_queue',[StackQueueController::class,'stack_queue']);
+Route::get('tree',[StackQueueController::class,'tree']);
 
 Route::get('even_odd',[LogicController::class,'even_odd']);
 Route::get('prime',[LogicController::class,'prime']);

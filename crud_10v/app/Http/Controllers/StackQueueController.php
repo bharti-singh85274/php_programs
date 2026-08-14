@@ -196,7 +196,7 @@ Reverse Queue
 
 <!------------------------------ REVERSE QUEUE--------------------------------->
 
-<?php
+<?php    //ENQUE, DEQUE, ISEMPTY, DISPLAY, REVERSE functions
 
 class Queue
 {
@@ -267,7 +267,7 @@ $q->display();                 //POINT TO REMEMBER
 
 <?php
 
-class CircularQueue
+class CircularQueue     // enque,deque,display
 {
     public $queue;         //POINT TO REMEMBER
     public $front;

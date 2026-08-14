@@ -229,7 +229,7 @@ class AdvanceLogicsController extends Controller
                 return $str;
             }
 
-            return reverseString(substr($str,1)) . $str[0];
+            return reverseString(substr($str,1)) . $str[0];  // coz of $str[0], chacter b goes on last
         }
 
         echo reverseString("hello");
