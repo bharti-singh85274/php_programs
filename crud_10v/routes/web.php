@@ -56,6 +56,7 @@ Route::get('relations',[CrudController::class,'relations']);
 
 
 Route::get('reverse_string',[LogicController::class,'reverse_string']);
+Route::get('count_vowels',[LogicController::class,'count_vowels']);
 Route::get('midvalue',[LogicController::class,'midvalue']);
 Route::get('duplicate_value',[LogicController::class,'duplicate_value']);
 Route::get('remove_duplicate',[LogicController::class,'remove_duplicate']);
@@ -67,6 +68,13 @@ Route::get('missing_no',[LogicController::class,'missing_no']); // using in_arra
 Route::get('move_to_end',[LogicController::class,'move_to_end']);
 Route::get('anagram',[LogicController::class,'anagram']);
 Route::get('count_frequency_array',[LogicController::class,'count_frequency_array']);
+Route::get('count_frequency_char',[LogicController::class,'count_frequency_char']);
+Route::get('duplicate_char',[LogicController::class,'duplicate_char']); // or repeating characters
+Route::get('non_repeat_char',[LogicController::class,'non_repeat_char']);
+Route::get('remove_duplicate_char',[LogicController::class,'remove_duplicate_char']);
+Route::get('first_non_rep_char',[LogicController::class,'first_non_rep_char']);
+Route::get('most_freq_char',[LogicController::class,'most_freq_char']);
+Route::get('longest_substring',[LogicController::class,'longest_substring']);
 Route::get('sum',[LogicController::class,'sum']);
 Route::get('rotate_array',[LogicController::class,'rotate_array']);
 Route::get('binary_search',[LogicController::class,'binary_search']);
@@ -81,7 +89,8 @@ Route::get('hashing',[AdvanceLogicsController::class,'hashing']);
 Route::get('recursion',[AdvanceLogicsController::class,'recursion']);
 Route::get('linked_list',[LinkedListController::class,'linked_list']);
 Route::get('stack_queue',[StackQueueController::class,'stack_queue']);
-Route::get('tree',[StackQueueController::class,'tree']);
+Route::get('tree',[TreesController::class,'tree']);
+Route::get('graph',[GraphsController::class,'graph']);
 
 Route::get('even_odd',[LogicController::class,'even_odd']);
 Route::get('prime',[LogicController::class,'prime']);

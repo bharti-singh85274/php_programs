@@ -86,6 +86,7 @@ class LogicController extends Controller
     }
 
 
+
     public function remove_duplicate(){
 
     $arr = [2,2,3,5,2,2,6,3,3,5];
@@ -133,7 +134,66 @@ class LogicController extends Controller
 
     }
 
+
+    function remove_duplicate_char(){
+
+             // remove duplicate characters from programming
+        $str = "programming";
+
+        $result = [];
+
+        $count = 0;
+
+        for($i=0; isset($str[$i]); $i++){
+
+        $duplicate = false;
+
+            for($j=0; $j < $count; $j++){
+
+            if($result[$j] == $str[$i]){
+                $duplicate = true;
+                break;
+            }
+            }
+
+            if($duplicate == false){
+            $result[$count] = $str[$i];
+            $count++;
+            }
+
+        }
+
+        for($i=0; $i < $count; $i++){
+        echo $result[$i];
+        }
+
+    }
     
+
+     function count_vowels(){
+
+       // count vowels in hello world
+
+       $str = "Hello World";
+       $count = 0;
+
+       for($i=0; $i < strlen($str);$i++){
+       
+         if(
+            $str[$i] == 'a' ||
+            $str[$i] == 'e' ||
+            $str[$i] == 'i' ||
+            $str[$i] == 'o' ||
+            $str[$i] == 'u' 
+         ){
+            $count++;
+         }
+
+       }
+
+       echo $count;
+
+    }
 
 
     function duplicate_string(){
@@ -148,9 +208,8 @@ class LogicController extends Controller
             echo $k. ' '.$val. '<br>';
       }
 
-
-
     }
+
 
    function max_smax(){
   
@@ -759,10 +818,260 @@ class LogicController extends Controller
         echo "Minimum Frequency Element = " . $minElement . "<br>";
         echo "Frequency = " . $minFreq;
 
+  }
 
+
+  function count_frequency_char(){
+
+    // find how many times each character occur in programming
+
+      $str = 'programming';
+
+    $freq = [];
+
+    
+    for($i=0; $i < strlen($str); $i++){
+    
+    $char = $str[$i];
+
+        if(isset($freq[$char])){
+
+        $freq[$char]++;
+        }else{
+
+        $freq[$char] = 1;
+        }
+    
+    }
+
+    print_r($freq);
 
   }
 
+
+  function duplicate_char(){
+                
+              // Find duplicate characters (or repeating characters)
+    $str = "programming";
+
+    $freq = [];
+
+    for($i=0; $i < strlen($str); $i++){
+
+    $char = $str[$i];
+
+    if(isset($freq[$char])){
+        $freq[$char]++;
+    }else{
+
+        $freq[$char] = 1;
+    }
+
+    }
+
+    foreach($freq as $char=>$count){
+
+        if($count > 1){
+        echo $char. " ";
+        }
+    }
+
+  }
+
+
+  function non_repeat_char(){
+
+    // find non repeating characters [HINT: first count each character,then print the charcters  whose count is exactly 1]
+
+    $str = "Programming";
+
+        $freq = [];
+
+        // count each character
+
+        for($i=0; $i < strlen($str); $i++){
+
+        $char = $str[$i];
+
+        if(isset($freq[$char])){
+            
+            $freq[$char]++;
+        }else{
+
+            $freq[$char] = 1;
+        }
+
+        }
+
+        // print non-repeating characters
+
+        foreach($freq as $char => $count){
+        
+        if($count == 1){
+            echo $char. " ";
+        }
+
+        }
+
+  }
+
+
+  function first_non_rep_char(){
+
+    // find the first character that appears only once
+      $str = 'swiss';
+
+        $freq = [];
+
+        for($i=0; $i < strlen($str);$i++){
+
+            $char = $str[$i];
+
+            if(isset($freq[$char])){
+
+            $freq[$char]++;
+            }else{
+            $freq[$char] = 1;
+            }
+
+        }
+
+
+        for($i=0; $i < strlen($str); $i++){
+
+            if($freq[$str[$i]] == 1){
+            echo $str[$i];
+            break;
+            }
+        }
+   
+
+  }
+
+
+  function most_freq_char(){
+
+     // find the most frequent character
+      $str = 'programming';
+
+        $freq = [];
+
+        for($i=0; $i < strlen($str);$i++){
+
+            $char = $str[$i];
+            $freq[$char] = (($freq[$char] ?? 0)+ 1);
+
+        }
+
+        $maxChar = '';
+        $maxCount = 0;
+
+        foreach($freq as $char => $count){
+
+        if($count > $maxCount){
+            
+            $maxCount = $count;
+            $maxChar = $char;
+        }  
+
+        }
+
+        echo $maxChar;
+
+  }
+
+
+
+  function longest_substring(){
+  
+    // find longest substring without repeating characters (sliding window)
+    
+      $str = 'abcabcbb';
+
+        $left = 0;
+
+        $maxLength = 0;
+
+        $start = 0;
+
+        $seen = [];
+
+        
+        for($right =0; $right < strlen($str); $right++){
+
+        $char = $str[$right];
+
+        if(isset($seen[$char]) && $seen[$char] >= $left){
+            
+            $left = $seen[$char] + 1;
+        }
+
+        $seen[$char] = $right;
+
+        if($right - $left + 1 > $maxLength){
+            $maxLength = $right - $left + 1;
+            $start = $left;
+        }
+
+        }
+
+        echo "Length:" .$maxLength . "\n";
+        echo "Substring:" . substr($str,$start,$maxLength);
+
+
+        // WITHOUT BUILT IN STRING FUNCTIONS
+        $str = 'abcabcbb';
+
+        $left = 0;
+
+        $maxLength = 0;
+
+        $start = 0;
+
+        $seen = [];
+
+        $length = 0;
+
+        
+        // Find length manually
+
+        for($i=0; isset($str[$i]); $i++){
+        $length++;
+        }
+        
+        for($right =0; $right < $length; $right++){
+
+        $char = $str[$right];
+
+        //check whether character already exists
+        if(isset($seen[$char]) && $seen[$char] >= $left){
+            
+            $left = $seen[$char] + 1;
+        }
+
+        //store latest position of character
+        $seen[$char] = $right;
+
+        //calculate current substring length
+        $currentLength = $right - $left + 1;
+
+        if($currentLength > $maxLength){
+            $maxLength = $currentLength;
+            $start = $left;
+        }
+
+        }
+
+        // print longest substring manually
+        echo "Length:" .$maxLength . "\n";
+        echo "Substring:";
+
+        for($i = $start; $i < $start + $maxLength; $i++){
+            echo $str[$i];
+        }
+
+
+  }
 
 
   function sum(){
@@ -1080,13 +1389,13 @@ class LogicController extends Controller
         $key = $arr[$i];
         $j = $i - 1;    // Insertion Sort always compares the key with the previous elements.
 
-        while($j >= 0 && $arr[$j] > $key)      //#Things to Remember
+        while($j >= 0 && $arr[$j] > $key)      //#Things to Remember >=0
         {
-            $arr[$j + 1] = $arr[$j];          //#Things to Remember
+            $arr[$j + 1] = $arr[$j];          //#Things to Remember, $arr[$j+1]
             $j--;
         }
 
-        $arr[$j + 1] = $key;                  //#Things to Remember
+        $arr[$j + 1] = $key;                  //#Things to Remember, $arr[$j+1]
     }
 
     echo "Sorted Array: ";
